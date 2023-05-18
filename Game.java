@@ -32,7 +32,14 @@ public class Game{
         return center;
     }
 
-    public void removeElemCent(){
-        Game.center.clear();
+    public void addCenter(Card cardii) {
+        center.add(cardii);
     }
+
+
+
+
+    // public void removeElemCent(){
+    //     Game.center.clear();
+    // }
 }

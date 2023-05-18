@@ -2,7 +2,7 @@ import java.util.*;
 
 public class Testgame {
     public static Card createCards(String suit, String rank){
-        Card cardii = new Card(suit, rank);
+        Card cardii = new Card(suit , rank);
         return cardii;
     }
     public static void initGameSet(int amount, ArrayList<Card> deck, ArrayList<Card> playerCards){
@@ -20,6 +20,7 @@ public class Testgame {
         for(int i = 0; i < 4; i++){
             for(int j = 2; j < 15; j++){
                 if(j == 11) rank = "J";
+                else if(j == 10) rank = "X";
                 else if(j == 12) rank = "Q";
                 else if(j == 13) rank = "K";
                 else if(j == 14) rank = "A";
@@ -80,6 +81,32 @@ public class Testgame {
         System.out.println("Player 2: "+player2.getPlayCards());
         System.out.println("Player 3: "+player3.getPlayCards());
         System.out.println("Player 4: "+player4.getPlayCards());
+
+        
+
+        Scanner input = new Scanner(System.in);
+        System.out.print("> ");
+        String addedCard = input.next();
+        String firstString = addedCard.substring(0, 1);
+        String secondString = addedCard.substring(1);
+
+        for(int i =0; i<p1.size(); i++){
+            String element = String.valueOf(p1.get(i));
+            //System.out.println(element);
+            int comparison = addedCard.compareTo(element);
+            if (comparison == 0) {
+                System.out.println("Add");
+                p1.remove(i);
+                player1.addCenter(createCards(firstString, secondString));
+            } 
+        }
+        System.out.println(p1);
+        System.out.println("Center: " + player3.getCenter());
+
+        
+    
+        // add card from player into center
+
     }
 
 }
