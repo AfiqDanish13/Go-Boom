@@ -82,8 +82,6 @@ public class Testgame {
         System.out.println("Player 3: "+player3.getPlayCards());
         System.out.println("Player 4: "+player4.getPlayCards());
 
-        
-
         Scanner input = new Scanner(System.in);
         System.out.print("> ");
         String addedCard = input.next();

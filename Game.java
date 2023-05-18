@@ -36,9 +36,6 @@ public class Game{
         center.add(cardii);
     }
 
-
-
-
     // public void removeElemCent(){
     //     Game.center.clear();
     // }
