@@ -6,7 +6,6 @@ public class Game{
     protected static ArrayList<Card> center = new ArrayList<>();
     private ArrayList<Card> playCards = new ArrayList<>();
     private int score;
-
     public Game(){};
     public Game(ArrayList<Card> deck, Card center, ArrayList<Card> playCards){
         if(countInsert == 0){
@@ -34,6 +33,10 @@ public class Game{
 
     public void addCenter(Card cardii) {
         center.add(cardii);
+    }
+
+    public void checkTurn(){
+        
     }
 
     // public void removeElemCent(){

@@ -8,8 +8,13 @@ public class Card {
         this.suit = suit;
         this.rank = rank;
     }
-
     public String toString(){
         return suit + rank;
+    }
+    public String getSuit(){
+        return suit;
+    }
+    public String getRank(){
+        return rank;
     }
 }
