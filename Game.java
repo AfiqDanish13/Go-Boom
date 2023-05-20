@@ -1,11 +1,16 @@
 import java.util.*;
 
-public class Game{
+public class Game extends Card{
     protected static ArrayList<Card> deck = new ArrayList<>();
-    static int countInsert = 0;
     protected static ArrayList<Card> center = new ArrayList<>();
     private ArrayList<Card> playCards = new ArrayList<>();
+    static int countInsert = 0;
     private int score;
+    public static int tricksNum = 1;
+    public static int turns = 0; public static String playerTurns = "";
+    public static int turnsNum = 1;
+    public static String userInput = "";
+
     public Game(){};
     public Game(ArrayList<Card> deck, Card center, ArrayList<Card> playCards){
         if(countInsert == 0){
@@ -19,6 +24,58 @@ public class Game{
         }
     }
 
+    public static void deterFirstTurns(String r, int turns, String playerTurns){
+        switch (r) {
+            case "A": case "5" : case "9" : case "K":
+                Game.turns = 1;
+                Game.playerTurns = "Player1";
+                break;
+            case "2" : case "6" : case "X":
+                Game.turns = 2;
+                Game.playerTurns = "Player2";
+                break;
+            case  "3" : case "7" : case "J":
+                Game.turns = 3;
+                Game.playerTurns = "Player3";
+                break;
+            case "4": case "8": case "Q":
+                Game.turns = 4;
+                Game.playerTurns = "Player4";
+                break;
+        }
+    }
+
+    public static void deterPlayerTurn(){
+        switch (Game.turns) {
+            case 1:
+                playerTurns = "Player1";
+                break;
+            case 2:
+                playerTurns = "Player2";
+                break;
+            case 3:
+                playerTurns = "Player3";
+                break;
+            case 4:
+                playerTurns = "Player4";
+                break;
+        }
+    }
+
+    // public static void cardInsertion(ArrayList<Card> player){
+
+    // }
+
+    // public static void gameOn(){
+    //     Scanner input = new Scanner(System.in);
+    //     System.out.print("> "); userInput = input.nextLine(); userInput.toLowerCase();
+    //     if(userInput.equals("s")){
+
+    //     }
+        
+       
+    // }
+
     public ArrayList<Card> getDeck(){
         return deck;
     }
@@ -31,15 +88,7 @@ public class Game{
         return center;
     }
 
-    public void addCenter(Card cardii) {
-        center.add(cardii);
+    public int getScore(){
+        return score;
     }
-
-    public void checkTurn(){
-        
-    }
-
-    // public void removeElemCent(){
-    //     Game.center.clear();
-    // }
 }

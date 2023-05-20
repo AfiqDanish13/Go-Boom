@@ -1,72 +1,89 @@
 import java.util.*;
 
-public class Testgame {
-    public static Card createCards(String suit, String rank) {
+public class Testgame{
+    public static Card createCards(String suit, String rank){
         Card cardii = new Card(suit, rank);
         return cardii;
     }
 
-    public static void initGameSet(int amount, ArrayList<Card> deck, ArrayList<Card> playerCards) {
+    public static void initGameSet(int amount, ArrayList<Card> deck, ArrayList<Card> playerCards){
         playerCards.addAll(deck.subList(0, amount));
         deck.subList(0, amount).clear();
     }
-    public static void menu(int trick, Game player1, Game player2,Game player3, Game player4, Game game, int turn){
-        System.out.println("Trick #" + trick);
-        System.out.println("Player 1: " + player1.getPlayCards());
-        System.out.println("Player 2: " + player2.getPlayCards());
-        System.out.println("Player 3: " + player3.getPlayCards());
-        System.out.println("Player 4: " + player4.getPlayCards());
-        System.out.println("Center  : " + game.getCenter());
-        System.out.println("Deck    : " + game.getDeck());
-        System.out.println("Turn    : Player" + turn);
-        
+
+    public static String eachRound(int roundNum, Game p1, Game p2, Game p3, Game p4, ArrayList<Card> center, ArrayList<Card> deck, String playerturns){
+        return "Trick #" + roundNum + "\n" +
+                "Player1: "+ p1.getPlayCards() + "\n" + 
+                "Player2: "+ p2.getPlayCards() + "\n" + 
+                "Player3: "+ p3.getPlayCards() + "\n" + 
+                "Player4: "+ p4.getPlayCards() + "\n" + 
+                "Center : "+ center + "\n" + 
+                "Deck   : "+ deck + "\nScore  : Player1 = "+ p1.getScore() + " | Player2 = " + p2.getScore() + " | Player3 = " + p3.getScore() + " | Player4 = " + p4.getScore() + 
+                "\nTurns  : " +  playerturns + "\n> ";
     }
 
-    public static void main(String[] args) {
-        ArrayList<Card> cards = new ArrayList<Card>();
-        String suit, rank;
-        Card initCenter;
-        //String[] turn = { "p1", "p2", "p3", "p4" };
-        ArrayList<Card> p1 = new ArrayList<Card>();
-        ArrayList<Card> p2 = new ArrayList<Card>();
-        ArrayList<Card> p3 = new ArrayList<Card>();
-        ArrayList<Card> p4 = new ArrayList<Card>();
-        for (int i = 0; i < 4; i++) {
-            for (int j = 2; j < 15; j++) {
-                if (j == 11)
-                    rank = "J";
-                else if (j == 10)
-                    rank = "X";
-                else if (j == 12)
-                    rank = "Q";
-                else if (j == 13)
-                    rank = "K";
-                else if (j == 14)
-                    rank = "A";
-                else
-                    rank = "" + j;
-                switch (i) {
+    // start new game
+    public static void startNewGame(ArrayList<Card> copyCards, ArrayList<Card> p1, ArrayList<Card> p2, ArrayList<Card> p3, ArrayList<Card> p4, ArrayList<Card> deck, ArrayList<Card> center){
+        Collections.shuffle(copyCards);
+        ArrayList<Card> copyCards2 = new ArrayList<>(copyCards);
+        deck.clear();deck.addAll(copyCards2);
+        center.clear();center.add(deck.get(0));
+        copyCards2.subList(0,1).clear();
+        p1.clear(); p2.clear(); p3.clear(); p4.clear();
+        initGameSet(7, deck, p1);
+        initGameSet(7, deck, p2);
+        initGameSet(7, deck, p3);
+        initGameSet(7, deck, p4);
+        Game.deterFirstTurns(center.get(0).rank, Game.turns, Game.playerTurns);
+        Game.tricksNum = 1;
+    }
+
+    // draw cards
+    public static void drawCards(ArrayList<Card> deck, ArrayList<Card> playCards){
+        playCards.addAll(deck.subList(0, 1));
+        deck.subList(0, 1).clear();
+    }
+
+    public static void main(String[] args){
+        ArrayList<Card> cards = new ArrayList<Card>(); 
+        String suit, rank; 
+        Card initCenter; 
+        ArrayList<Card> p1 = new ArrayList<Card>(); 
+        ArrayList<Card> p2 = new ArrayList<Card>();  
+        ArrayList<Card> p3 = new ArrayList<Card>(); 
+        ArrayList<Card> p4 = new ArrayList<Card>(); 
+        Scanner input = new Scanner(System.in);
+        String userInput;
+        for(int i = 0; i < 4; i++){
+            for(int j = 2; j < 15; j++){
+                if(j == 10) rank = "X";
+                else if(j == 11) rank = "J";
+                else if(j == 12) rank = "Q";
+                else if(j == 13) rank = "K";
+                else if(j == 14) rank = "A";
+                else rank = "" + j;
+                switch(i){
                     case 0:
                         suit = "c";
-                        cards.add(createCards(suit, rank));
+                        cards.add(createCards(suit,rank));
                         break;
                     case 1:
                         suit = "d";
-                        cards.add(createCards(suit, rank));
+                        cards.add(createCards(suit,rank));
                         break;
                     case 2:
                         suit = "h";
-                        cards.add(createCards(suit, rank));
+                        cards.add(createCards(suit,rank));
                         break;
                     case 3:
                         suit = "s";
-                        cards.add(createCards(suit, rank));
+                        cards.add(createCards(suit,rank));
                         break;
                 }
             }
         }
         Collections.shuffle(cards);
-        // System.out.println(cards);
+        ArrayList<Card> copyCards = new ArrayList<Card>(cards);
 
         // center card / determine who starts first
         initCenter = cards.get(0);
@@ -85,38 +102,102 @@ public class Testgame {
         Game player4 = new Game(cards, initCenter, p4);
         Game game = new Game();
 
+        // set the player who starts the game
+        Game.deterFirstTurns(game.getCenter().get(0).rank, Game.turns, Game.playerTurns);
+        
+        // start gameplay
+        while(true){
+            ArrayList<Card> arrCards = new ArrayList<>();
+            if(Game.turns == 1) arrCards = player1.getPlayCards();
+            else if(Game.turns == 2) arrCards = player2.getPlayCards();
+            else if(Game.turns == 3) arrCards = player3.getPlayCards();
+            else if(Game.turns == 4) arrCards = player4.getPlayCards();
+            System.out.print(eachRound(Game.tricksNum, player1, player2, player3, player4, game.getCenter(), game.getDeck(), Game.playerTurns));
+            // System.out.print(Game.turns);
+            // System.out.println(Game.turnsNum);
 
-        // p1 start first , 1 start first
-        int turn = 2;
-        while (true) {
-            int trick = 1;
-            System.out.println(turn);
-            Game playerTurn = null;
-            if (turn == 1) playerTurn = player1;
-            else if (turn == 2) playerTurn = player2;
-            else if (turn == 3) playerTurn = player3;
-            else if (turn == 4) playerTurn = player4;
-            menu(trick, player1, player2, player3, player4, game, turn);
-            Scanner input = new Scanner(System.in);
-            System.out.print("> ");
-
-            String command = input.next();
-            String firstString = command.substring(0, 1);
-            String secondString = command.substring(1);
-            if (command == "c") 
-                
-            for (int i = 0; i < playerTurn.getPlayCards().size(); i++) {
-                String element = String.valueOf(playerTurn.getPlayCards().get(i));
-                // System.out.println(element);
-                int comparison = command.compareTo(element);
-                if (comparison == 0) {
-                   // System.out.println("Add");
-                    playerTurn.getPlayCards().remove(i);
-                    playerTurn.addCenter(createCards(firstString, secondString));
+            userInput = input.nextLine(); //userInput = userInput.toLowerCase();
+            if(userInput.equals("x")){
+                break;
+            }
+            else if(userInput.equals("s")){
+                startNewGame(copyCards, player1.getPlayCards(), player2.getPlayCards(), player3.getPlayCards(), player4.getPlayCards(), Game.deck, Game.center);
+            }
+            else if(userInput.equals("d")){
+                if(Game.deck.size() != 0){
+                    ArrayList<Card> passArr = new ArrayList<>();
+                    if(Game.turns == 1) passArr = player1.getPlayCards();
+                    else if(Game.turns == 2) passArr = player2.getPlayCards();
+                    else if(Game.turns == 3) passArr = player3.getPlayCards();
+                    else if(Game.turns == 4) passArr = player4.getPlayCards();
+                    drawCards(Game.deck, passArr);
+                }
+                else{
+                    if(Game.turnsNum == 4) {
+                        Game.turns = 1; Game.turnsNum = 1; Game.tricksNum++; Game.deterPlayerTurn();// should end the tricks num and start a new lead card
+                    }
+                    else {
+                        Game.turns++; Game.turnsNum++; Game.tricksNum++; Game.deterPlayerTurn();// next player turns
+                    }
                 }
             }
-            //System.out.println("Center: " + game.getCenter());
-            turn = turn+1;
+            else if(userInput.length() == 2 && (userInput.substring(0, 1).equals(Game.center.get(0).suit) || userInput.substring(1, 2).equals(Game.center.get(0).rank)) && (Game.center.size() != 0)){
+                int foundInd = 0;
+                for (int i = 0; i < arrCards.size(); i++) {
+                    String element = String.valueOf(arrCards.get(i));
+                    int comparison = userInput.compareTo(element);
+                    if (comparison == 0) {
+                        Game.center.add(arrCards.get(i));
+                        arrCards.remove(i);
+                        foundInd = 1;
+                        if(Game.turnsNum == 4) { // every player already make a move - this part is yet to determine the winner of the tricks // part ni kene ubah
+                            if(Game.turns == 4){ // reset turnsNum = 0 // reset turns to the winner of the tricks // increase the tricksNum // determine winner of tricks // clear the center
+                                Game.turns = 1; Game.turnsNum = 1; Game.tricksNum++; Game.deterPlayerTurn();
+                            }
+                            else{
+                                Game.turns++; Game.turnsNum++; Game.tricksNum++; Game.deterPlayerTurn();
+                            }
+                        }
+                        else{
+                            if(Game.turns == 4){
+                                Game.turns = 1; Game.turnsNum++; Game.deterPlayerTurn();
+                            }
+                            else{
+                                Game.turns++; Game.turnsNum++; Game.deterPlayerTurn();// next player turns
+                            }
+                        }
+                    }
+                }
+                if(foundInd == 0){
+                    System.out.println("You have no specific cards.");
+                }
+            }
+            else if((Game.center.size() == 0) && (Game.turnsNum == 1) && (userInput.length() == 2)){
+                int foundInd = 0;
+                for (int i = 0; i < arrCards.size(); i++) {
+                    String element = String.valueOf(arrCards.get(i));
+                    int comparison = userInput.compareTo(element);
+                    if (comparison == 0) {
+                        Game.center.add(arrCards.get(i));
+                        arrCards.remove(i);
+                        foundInd = 1;
+                        if(Game.turns == 4){
+                            Game.turns = 1; Game.turnsNum++; Game.deterPlayerTurn();
+                        }
+                        else{
+                            Game.turns++; Game.turnsNum++; Game.deterPlayerTurn();// next player turns
+                        }
+                    }
+                }   
+                if(foundInd == 0){
+                    System.out.println("Card not found.");
+                }
+            }
+            else{
+                System.out.println("salah input la woi");
+            }
         }
+        System.out.print(eachRound(Game.tricksNum, player1, player2, player3, player4, game.getCenter(), game.getDeck(), Game.playerTurns));
     }
+
 }
