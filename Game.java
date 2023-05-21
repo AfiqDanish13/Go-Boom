@@ -1,3 +1,4 @@
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class Game extends Card{
@@ -7,6 +8,7 @@ public class Game extends Card{
     static int countInsert = 0;
     private int score;
     public static int tricksNum = 1;
+    public static Card winner = null;
     public static int turns = 0; public static String playerTurns = "";
     public static int turnsNum = 1;
     public static String userInput = "";
@@ -60,6 +62,16 @@ public class Game extends Card{
                 playerTurns = "Player4";
                 break;
         }
+    }
+    public static int compareCard(Card card){
+        String[] Rank = {"2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K", "A"};
+        int cardValue = 0;
+        for(int i=0; i<Rank.length; i++){
+            if((card.getRank()).equals(Rank[i])){
+                cardValue = i;
+            }
+        }
+        return cardValue;
     }
 
     // public static void cardInsertion(ArrayList<Card> player){
