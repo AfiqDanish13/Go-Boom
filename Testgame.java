@@ -204,8 +204,7 @@ public class Testgame {
                                                   // reset turnsNum = 0 // reset turns to the winner of the tricks //
                                                   // increase the tricksNum // determine winner of tricks // clear the
                                                   // center
-                            System.out.print(eachRound(Game.tricksNum, player1, player2, player3, player4, game.getCenter(), game.getDeck(), null));
-                            for (int k = 1; k < 4; k++) {
+                            for (int k = 1; k <= 4; k++) {
                                 // System.out.println(i + ": card : " + Game.center.get(i));
                                 if (leadCardSuit.equals(Game.center.get(k).suit)) { // compare suit
                                     int value = Game.compareCard(Game.center.get(k)); // compare rank
@@ -217,30 +216,32 @@ public class Testgame {
                             }
                             // System.out.println("Winner is : " + winner);
                             if (p1.contains(winnerCard)) {
-                                System.out.println("Winner is : Player1");
+                                System.out.println("\n\n*** Player1 wins Trick #1 ***");
                                 System.out.println("Card winner: " + winnerCard);
                                 Game winner = player1;
                                 Game.turns = 1;
+                                Game.deterPlayerTurn();
                                 arrCards = player1.getPlayCards();
                             }
                             else if (p2.contains(winnerCard)) {
-                                System.out.println("Winner is : Player2");
+                                System.out.println("\n\n*** Player2 wins Trick #1 ***");
                                 System.out.println("Card winner: " + winnerCard);
-                                Game winner = player1;
                                 Game.turns = 2;
+                                Game.deterPlayerTurn();
                                 arrCards = player2.getPlayCards();
                             } else if (p3.contains(winnerCard)) {
-                                System.out.println("Winner is : Player3");
+                                System.out.println("\n\n*** Player3 wins Trick #1 ***");
                                 System.out.println("Card winner: " + winnerCard);
-                                Game winner = player3;
                                 Game.turns = 3;
+                                Game.deterPlayerTurn();
                                 arrCards = player3.getPlayCards();
                             } else if (p4.contains(winnerCard)) {
-                                System.out.println("Winner is : Player4");
+                                System.out.println("\n\n*** Player4 wins Trick #1 ***");
                                 System.out.println("Card winner: " + winnerCard);
-                                Game winner = player4;
                                 Game.turns = 4;
+                                Game.deterPlayerTurn();
                                 arrCards = player4.getPlayCards();
+
                             }
                             Game.turnsNum = 0;
                             Game.tricksNum++;
@@ -248,18 +249,21 @@ public class Testgame {
                             Game.center.clear();
                             // winner place lead card
                             if (Game.center.size() == 0)
-                                System.out.println("Winner place the lead card");
-                                userInput = input.nextLine();
-                                for (int k = 0; i < arrCards.size(); k++) {
-                                    String element2 = String.valueOf(arrCards.get(k));
-                                    int comparison2 = userInput.compareTo(element2);
+                                System.out.println();
+                                System.out.println(eachRound(Game.tricksNum, player1, player2, player3, player4, game.getCenter(), game.getDeck(), Game.playerTurns));
+                                String userInput2 = input.nextLine();
+                                for (int j = 0; j < arrCards.size(); j++) {
+                                    String element2 = String.valueOf(arrCards.get(j));
+                                    int comparison2 = userInput2.compareTo(element2);
                                     if (comparison2 == 0) {
-                                        Game.center.add(arrCards.get(k));
-                                        arrCards.remove(k);
-                                        foundInd = 1;
+                                        Game.center.add(arrCards.get(j));
+                                        arrCards.remove(arrCards.get(j));
+                                        Game.turns++;
+                                        Game.deterPlayerTurn();
                                     }
                                 }
-
+                                
+                                Game.turnsNum++;
                         } else {
                             if (Game.turns == 4) {
                                 Game.turns = 1;
