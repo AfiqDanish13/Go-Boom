@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Card {
+public class Card implements java.io.Serializable {
     public String suit;
     public String rank;
 

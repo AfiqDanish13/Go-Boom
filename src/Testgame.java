@@ -1,3 +1,7 @@
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.*;
 
 public class Testgame {
@@ -76,6 +80,73 @@ public class Testgame {
         deck.subList(0, 1).clear();
     }
 
+        // save material
+    public static void saveGame(Game game, int playerBel){ 
+        try{
+            if(playerBel == 1){
+                FileOutputStream fouts = new FileOutputStream("player1.sav");
+                ObjectOutputStream oos = new ObjectOutputStream(fouts);
+                oos.writeObject(game);
+                oos.flush();
+                oos.close();
+            }else if(playerBel == 2){
+                FileOutputStream fouts = new FileOutputStream("player2.sav");
+                ObjectOutputStream oos = new ObjectOutputStream(fouts);
+                oos.writeObject(game);
+                oos.flush();
+                oos.close();
+            }else if(playerBel == 3){
+                FileOutputStream fouts = new FileOutputStream("player3.sav");
+                ObjectOutputStream oos = new ObjectOutputStream(fouts);
+                oos.writeObject(game);
+                oos.flush();
+                oos.close();
+            }else if(playerBel == 4){
+                FileOutputStream fouts = new FileOutputStream("player4.sav");
+                ObjectOutputStream oos = new ObjectOutputStream(fouts);
+                oos.writeObject(game);
+                oos.flush();
+                oos.close();
+            }
+        } catch(Exception ex){
+            System.out.println("Save error!!! Can't save game data.");
+        }
+    }
+
+    public static Game loadGame(int playerBel) { 
+        try {
+            FileInputStream init = new FileInputStream("player1.sav");
+            ObjectInputStream in = new ObjectInputStream(init);
+            Game game = (Game) in.readObject();
+            if(playerBel == 1){
+                FileInputStream fins = new FileInputStream("player1.sav");
+                ObjectInputStream ois = new ObjectInputStream(fins);
+                game = (Game) ois.readObject();
+                ois.close();
+            }else if(playerBel == 2){
+                FileInputStream fins = new FileInputStream("player2.sav");
+                ObjectInputStream ois = new ObjectInputStream(fins);
+                game = (Game) ois.readObject();
+                ois.close();
+            }else if(playerBel == 3){
+                FileInputStream fins = new FileInputStream("player3.sav");
+                ObjectInputStream ois = new ObjectInputStream(fins);
+                game = (Game) ois.readObject();
+                ois.close();
+            }else if(playerBel == 4){
+                FileInputStream fins = new FileInputStream("player4.sav");
+                ObjectInputStream ois = new ObjectInputStream(fins);
+                game = (Game) ois.readObject();
+                ois.close();
+            }
+            System.out.println("Game loaded successfully.");
+            return game;
+        } catch (Exception ex) {
+            System.out.println("Load error!!! can't load data.");
+            return null;
+        }
+    }
+
     public static void main(String[] args) {
         ArrayList<Card> cards = new ArrayList<Card>();
         String suit, rank;
@@ -139,6 +210,55 @@ public class Testgame {
         Game player3 = new Game(cards, initCenter, p3);
         Game player4 = new Game(cards, initCenter, p4);
         Game game = new Game();
+
+        // save material
+        ArrayList<Card> savedCenter = new ArrayList<>(); 
+        ArrayList<Card> savedDeck = new ArrayList<>(); 
+        int savedTurns = 0;
+        int savedTurnsNum = 0;
+        int savedTricksNum = 0;
+        String savedPlayerTurns = "";
+        int savedScore1 = 0; 
+        int savedScore2 = 0; 
+        int savedScore3 = 0; 
+        int savedScore4 = 0; 
+        String player1file = "player1.sav";
+        String player2file = "player2.sav";
+        String player3file = "player3.sav";
+        String player4file = "player4.sav";
+
+        java.io.File file1 = new java.io.File(player1file);
+        java.io.File file2 = new java.io.File(player2file);
+        java.io.File file3 = new java.io.File(player3file);
+        java.io.File file4 = new java.io.File(player4file);
+
+        if(file1.exists() && file2.exists() && file3.exists() && file4.exists()){
+            try{
+                // System.out.println("jadi ke x jadi");
+                FileInputStream init = new FileInputStream("player1.sav");
+                ObjectInputStream in = new ObjectInputStream(init);
+                Game gameDup1 = (Game) in.readObject();
+                for(Card cardDup:gameDup1.getDupCenter()){
+                    String copySuit = cardDup.getSuit();
+                    String copyRank = cardDup.getRank();
+                    Card copyCardCenter = new Card(copySuit,copyRank);
+                    savedCenter.add(copyCardCenter);
+                }
+                for(Card cardDup:gameDup1.getDupdeck()){
+                    String copySuit = cardDup.getSuit();
+                    String copyRank = cardDup.getRank();
+                    Card copyCardCenter = new Card(copySuit,copyRank);
+                    savedDeck.add(copyCardCenter);
+                }
+                savedTurns = gameDup1.getDupTurns();
+                savedTurnsNum = gameDup1.getDupTurnsNum();
+                savedTricksNum = gameDup1.getDupTrickNum();
+                savedPlayerTurns = gameDup1.getPlayerTurns();
+            }catch(Exception ex){
+                System.out.println("File cannot be retrieved");
+            }
+            
+        }
 
         // set the player who starts the game
         Game.deterFirstTurns(game.getCenter().get(0).rank, Game.turns, Game.playerTurns);
@@ -261,6 +381,90 @@ public class Testgame {
                     else if (Game.turns == 4)
                         passArr = player4.getPlayCards();
                     drawCards(Game.deck, passArr, player1.getPlayCards(), player2.getPlayCards(), player3.getPlayCards(), player4.getPlayCards(), p1,p2,p3,p4);
+                }
+            }else if (userInput.equals("save")){ // save material
+                savedCenter.clear(); savedDeck.clear();
+                for(int i = 1; i <= 4; i++){
+                    if (i == 1){
+                        player1.getDupCenter().clear(); player1.getDupdeck().clear();
+                        player1.setDupCenter(Game.center);
+                        player1.setDupDeck(Game.deck);
+                        player1.setDupTurns(Game.turns);
+                        player1.setDupTurnsNum(Game.turnsNum);
+                        player1.setDupTricksNum(Game.tricksNum);
+                        player1.setDupPlayerTurns(Game.playerTurns);
+                        saveGame(player1,1);
+                    }else if(i == 2){
+                        saveGame(player2, 2);
+                    }else if(i == 3){
+                        saveGame(player3,3);
+                    }else if(i == 4){
+                        saveGame(player4, 4);
+                    }
+                }
+                savedTurns = Game.turns;
+                savedTurnsNum = Game.turnsNum;
+                savedTricksNum = Game.tricksNum;
+                savedPlayerTurns = Game.playerTurns;
+                savedScore1 = player1.getIndScore();
+                savedScore2 = player2.getIndScore();
+                savedScore3 = player3.getIndScore();
+                savedScore4 = player4.getIndScore();
+                
+                for(Card copies : Game.center){
+                    String copySuit = copies.getSuit();
+                    String copyRank = copies.getRank();
+                    Card copyCardCenter = new Card(copySuit,copyRank);
+                    savedCenter.add(copyCardCenter);
+                }
+                for(Card copies : Game.deck){
+                    String copysuit = copies.getSuit();
+                    String copytRank = copies.getRank();
+                    Card copyCardDeck = new Card(copysuit,copytRank);
+                    savedDeck.add(copyCardDeck);
+                }
+                System.out.println("Game saved successfully");
+            }else if(userInput.equals("load")){ // save material
+                Game lud1 = loadGame(1);
+                Game lud2 = loadGame(2);
+                Game lud3 = loadGame(3);
+                Game lud4 = loadGame(4);
+
+                if (lud1 == null && lud2 == null && lud3 == null && lud4 == null){
+                    System.out.println("Load is unsuccessful!!");
+                }else{
+                    player1.setPlayCards(lud1.getPlayCards());
+                    player1.setScore(lud1.getIndScore());
+                    player2.setPlayCards(lud2.getPlayCards());
+                    player2.setScore(lud2.getIndScore());
+                    player3.setPlayCards(lud3.getPlayCards());
+                    player3.setScore(lud3.getIndScore());
+                    player4.setPlayCards(lud4.getPlayCards());
+                    player4.setScore(lud4.getIndScore());
+
+                    player1.setScore(savedScore1);
+                    player2.setScore(savedScore2);
+                    player3.setScore(savedScore3);
+                    player4.setScore(savedScore4);
+
+                    Game.turns = savedTurns;
+                    Game.turnsNum = savedTurnsNum;
+                    Game.playerTurns = savedPlayerTurns;
+                    Game.tricksNum = savedTricksNum;
+
+                    Game.center.clear();Game.deck.clear();
+                    for(Card copies : savedCenter){
+                        String copySuit = copies.getSuit();
+                        String copyRank = copies.getRank();
+                        Card copyCardCenter = new Card(copySuit,copyRank);
+                        Game.center.add(copyCardCenter);
+                    }
+                    for(Card copies : savedDeck){
+                        String copysuit = copies.getSuit();
+                        String copyRank = copies.getRank();
+                        Card copyCardDeck = new Card(copysuit,copyRank);
+                        Game.deck.add(copyCardDeck);
+                    }
                 }
             } else if (userInput.length() == 2
                     && (userInput.substring(0, 1).equals(Game.center.get(0).suit)

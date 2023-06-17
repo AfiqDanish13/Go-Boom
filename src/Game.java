@@ -1,9 +1,15 @@
 import java.lang.reflect.Array;
 import java.util.*;
 
-public class Game extends Card{
+public class Game extends Card implements java.io.Serializable{
     protected static ArrayList<Card> deck = new ArrayList<>();
     protected static ArrayList<Card> center = new ArrayList<>();
+    private ArrayList<Card> dupCenter = new ArrayList<>();
+    private ArrayList<Card> dupDeck = new ArrayList<>();
+    private int dupTurns = 0;
+    private int dupTurnsNum = 0;
+    private int dupTricksNum = 0;
+    private String dupPlayerTurns = "";
     private ArrayList<Card> playCards = new ArrayList<>();
     static int countInsert = 0;
     private int score;
@@ -111,6 +117,96 @@ public class Game extends Card{
 
     public ArrayList<Card> getCenter() {
         return center;
+    }
+
+    public ArrayList<Card> getDupCenter(){
+        return this.dupCenter;
+    }
+
+    public ArrayList<Card> getDupdeck(){
+        return this.dupDeck;
+    }
+
+    public int getDupTurns(){
+        return this.dupTurns;
+    }
+
+    public int getDupTurnsNum(){
+        return this.dupTurnsNum;
+    }
+
+    public int getDupTrickNum(){
+        return this.dupTricksNum;
+    }
+
+    public String getPlayerTurns(){
+        return this.dupPlayerTurns;
+    }
+
+    public int getIndScore(){
+        return score;
+    }
+
+    public void setPlayCards(ArrayList<Card> loadedCards){
+        this.playCards = loadedCards;
+    }
+
+    public void setScore(int loadedInt){
+        this.score = loadedInt;
+    }
+
+    public void setGameDeck(ArrayList<Card> loadedCards){
+        Game.deck = loadedCards;
+    }
+
+    public void setGameCenter(ArrayList<Card> loadedCards){
+        Game.center = loadedCards;
+    }
+
+    public void setDupCenter(ArrayList<Card> loadedCards){
+        for(Card card: loadedCards){
+            String dupSuit = card.getSuit();
+            String dupRank = card.getRank();
+            Card dupCard = new Card(dupSuit,dupRank);
+            this.dupCenter.add(dupCard);
+        }
+    }
+
+    public void setDupDeck(ArrayList<Card> loadedCards){
+        for(Card card: loadedCards){
+            String dupSuit = card.getSuit();
+            String dupRank = card.getRank();
+            Card dupCard = new Card(dupSuit,dupRank);
+            this.dupDeck.add(dupCard);
+        }
+    }
+
+    public void setDupTurns(int loadedint){
+        this.dupTurns = loadedint;
+    }
+
+    public void setDupTurnsNum(int loadedint){
+        this.dupTurnsNum = loadedint;
+    }
+
+    public void setDupTricksNum(int loadedint){
+        this.dupTricksNum = loadedint;
+    }
+
+    public void setDupPlayerTurns(String loadedstring){
+        this.dupPlayerTurns = loadedstring;
+    }
+    
+    public void setTurns(int loadedInt){
+        Game.turns = loadedInt;
+    }
+
+    public void setTurnsNum(int loadedInt){
+        Game.turnsNum = loadedInt;
+    }
+
+    public void setPlayersTurns(String loadedString){
+        Game.playerTurns = loadedString;
     }
 
     public void getScore(ArrayList<Card> p1Cards, ArrayList<Card> p2Cards, ArrayList<Card> p3Cards,
