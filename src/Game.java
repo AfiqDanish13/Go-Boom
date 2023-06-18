@@ -230,15 +230,14 @@ public class Game extends Card {
         int p2Score = calculateScore(p2Cards);
         int p3Score = calculateScore(p3Cards);
         int p4Score = calculateScore(p4Cards);
-        int highestScore = Math.max(Math.max(p1Score, p2Score), Math.max(p3Score, p4Score));
 
         String winner;
 
-        if (highestScore == p1Score) {
+        if (p1Score == 0) {
             winner = "Player 1";
-        } else if (highestScore == p2Score) {
+        } else if (p2Score == 0) {
             winner = "Player 2";
-        } else if (highestScore == p3Score) {
+        } else if (p3Score == 0) {
             winner = "Player 3";
         } else {
             winner = "Player 4";
