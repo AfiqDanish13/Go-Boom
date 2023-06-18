@@ -481,10 +481,10 @@ public class Testgame {
                                     } else {
                                         values.add(0); // Add the value to the ArrayList
                                     }
-                                    System.out.println(values);
+                                    //System.out.println(values);
                                 }
                                 int highestValueIndex = values.indexOf(Collections.max(values));
-                                System.out.println(highestValueIndex);
+                                //System.out.println(highestValueIndex);
                                 winnerCard = Game.center.get(highestValueIndex);
                             }
 
