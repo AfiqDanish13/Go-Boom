@@ -80,6 +80,7 @@ public class Testgame {
         }
         deck.subList(0, 1).clear();
     }
+
     public static String command(){ 
         return "Command \n" +"---------------------------------\n "+"  s    : start new game / reset\n" +
         "   d    : draw\n" + 
@@ -126,7 +127,6 @@ public class Testgame {
         System.out.println("\n###############################");
         System.out.println("| Welcome to GoBoom Card Game |");
         System.out.println("###############################");
-
     }
 
     public static Game loadGame(int playerBel) { 
@@ -319,6 +319,8 @@ public class Testgame {
                     //System.out.println("Turns : " +Game.turns);
                     System.out.println("\nPlayer " + (Game.turns) + " has no cards matching the lead card. Skipping turn.\n");
                     Game.turns += 1;
+                    if(Game.turns > 4)
+                        Game.turns = 1;
                     Game.deterPlayerTurn();
                     Game.turnsNum++;
                     canPlayCard = true;
@@ -326,6 +328,14 @@ public class Testgame {
                 // String geString = input.next();
             }
 
+            if (Game.turns == 1)
+                arrCards = player1.getPlayCards();
+            else if (Game.turns == 2)
+                arrCards = player2.getPlayCards();
+            else if (Game.turns == 3)
+                arrCards = player3.getPlayCards();
+            else if (Game.turns == 4)
+                arrCards = player4.getPlayCards();
 
             System.out.print(eachRound(Game.tricksNum, player1, player2, player3, player4, game.getCenter(),
                     game.getDeck(), Game.playerTurns));
