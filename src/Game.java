@@ -1,7 +1,6 @@
-import java.lang.reflect.Array;
 import java.util.*;
 
-public class Game extends Card implements java.io.Serializable{
+public class Game extends Card {
     protected static ArrayList<Card> deck = new ArrayList<>();
     protected static ArrayList<Card> center = new ArrayList<>();
     private ArrayList<Card> dupCenter = new ArrayList<>();
@@ -66,31 +65,47 @@ public class Game extends Card implements java.io.Serializable{
 
     public static void deterPlayerTurn() {
         switch (Game.turns) {
+            case 0:
+                playerTurns = "Player 4";
+                break;
             case 1:
-                playerTurns = "Player1";
+                playerTurns = "Player 1";
                 break;
             case 2:
-                playerTurns = "Player2";
+                playerTurns = "Player 2";
                 break;
             case 3:
-                playerTurns = "Player3";
+                playerTurns = "Player 3";
                 break;
             case 4:
-                playerTurns = "Player4";
+                playerTurns = "Player 4";
                 break;
         }
     }
 
     public static int compareCard(Card card) {
-        String[] Rank = { "2", "3", "4", "5", "6", "7", "8", "9", "X", "J", "Q", "K", "A" };
-        int[] RankValues = { 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 };
-        for (int i = 0; i < Rank.length; i++) {
-            if (card.getRank().equals(Rank[i])) {
-                return RankValues[i];
-            }
+        HashMap<String, Integer> rankMap = new HashMap<>();
+        rankMap.put("2", 2);
+        rankMap.put("3", 3);
+        rankMap.put("4", 4);
+        rankMap.put("5", 5);
+        rankMap.put("6", 6);
+        rankMap.put("7", 7);
+        rankMap.put("8", 8);
+        rankMap.put("9", 9);
+        rankMap.put("X", 10);
+        rankMap.put("J", 11);
+        rankMap.put("Q", 12);
+        rankMap.put("K", 13);
+        rankMap.put("A", 14);
+
+        Integer rankValue = rankMap.get(card.getRank());
+        if (rankValue != null) {
+            return rankValue;
+        } else {
+            // card not found
+            return -1;
         }
-        // card not found
-        return -1;
     }
 
     // public static void cardInsertion(ArrayList<Card> player){
@@ -235,40 +250,30 @@ public class Game extends Card implements java.io.Serializable{
         System.out.println("Player 3 Score: " + p3Score);
         System.out.println("Player 4 Score: " + p4Score);
         System.out.println("Round 1 is over , the winner is " + winner);
-
-
     }
 
     private int calculateScore(ArrayList<Card> cards) {
-    int score = 0;
-    for (Card card : cards) {
-        String rank = card.getRank();
-        int rankValue;
+        int score = 0;
+        HashSet<String> faceCards = new HashSet<>(Arrays.asList("K", "Q", "J", "X"));
+        HashSet<String> ace = new HashSet<>(Collections.singletonList("A"));
 
-        // Convert rank to numerical value
-        if (rank.equals("A")) {
-            rankValue = 1;
-        } else if (rank.equals("K") || rank.equals("Q") || rank.equals("J")) {
-            rankValue = 10;
-        } else if (rank.equals("X")) {
-            rankValue = 10;
-        } else {
-            rankValue = Integer.parseInt(rank);
-        }
+        for (Card card : cards) {
+            String rank = card.getRank();
+            int rankValue;
 
-        if (rankValue >= 2 && rankValue <= 10) {
-            // Face cards (2-10) have a value equal to their rank
+            if (faceCards.contains(rank)) {
+                rankValue = 10;
+            } else if (ace.contains(rank)) {
+                rankValue = 1;
+            } else {
+                rankValue = Integer.parseInt(rank);
+            }
+
             score += rankValue;
-        } else if (rankValue >= 11 && rankValue <= 13) {
-            // Face cards (K, Q, J) have a value of 10
-            score += 10;
-        } else if (rankValue == 1) {
-            // Ace has a value of 1
-            score += 1;
         }
+
+        return score;
     }
-    return score;
-}
 
 
 }

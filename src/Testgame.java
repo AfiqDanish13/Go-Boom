@@ -6,6 +6,7 @@ import java.util.*;
 
 public class Testgame {
     private static Card winner;
+    public static boolean trick1bool = true;
 
     public static Card createCards(String suit, String rank) {
         Card cardii = new Card(suit, rank);
@@ -21,19 +22,19 @@ public class Testgame {
             ArrayList<Card> deck, String playerturns) {
         if (playerturns != null) {
             return "\nTrick #" + roundNum + "\n" +
-                    "Player1: " + p1.getPlayCards() + "\n" +
-                    "Player2: " + p2.getPlayCards() + "\n" +
-                    "Player3: " + p3.getPlayCards() + "\n" +
-                    "Player4: " + p4.getPlayCards() + "\n" +
+                    "Player 1: " + p1.getPlayCards() + "\n" +
+                    "Player 2: " + p2.getPlayCards() + "\n" +
+                    "Player 3: " + p3.getPlayCards() + "\n" +
+                    "Player 4: " + p4.getPlayCards() + "\n\n" +
                     "Center : " + center + "\n" +
-                    "Deck   : " + deck +
+                    "Deck   : " + deck + "\n\n" + command() +
                     "\nTurns  : " + playerturns + "\n> ";
         } else {
             return "\nTrick #" + roundNum + "\n" +
-                    "Player1: " + p1.getPlayCards() + "\n" +
-                    "Player2: " + p2.getPlayCards() + "\n" +
-                    "Player3: " + p3.getPlayCards() + "\n" +
-                    "Player4: " + p4.getPlayCards() + "\n" +
+                    "Player 1: " + p1.getPlayCards() + "\n" +
+                    "Player 2: " + p2.getPlayCards() + "\n" +
+                    "Player 3: " + p3.getPlayCards() + "\n" +
+                    "Player 4: " + p4.getPlayCards() + "\n\n" +
                     "Center : " + center + "\n" +
                     "Deck   : " + deck;
         }
@@ -41,7 +42,7 @@ public class Testgame {
 
     // start new game
     public static void startNewGame(ArrayList<Card> copyCards, ArrayList<Card> p1, ArrayList<Card> p2,
-            ArrayList<Card> p3, ArrayList<Card> p4, ArrayList<Card> deck, ArrayList<Card> center) {
+        ArrayList<Card> p3, ArrayList<Card> p4, ArrayList<Card> deck, ArrayList<Card> center) {
         Collections.shuffle(copyCards);
         ArrayList<Card> copyCards2 = new ArrayList<>(copyCards);
         deck.clear();
@@ -79,8 +80,16 @@ public class Testgame {
         }
         deck.subList(0, 1).clear();
     }
+    public static String command(){ 
+        return "Command \n" +"---------------------------------\n "+"  s    : start new game / reset\n" +
+        "   d    : draw\n" + 
+        "  Card  : Card to play\n" + 
+        "  save  : save game\n" +
+        "  load  : load game\n" + 
+        "   x    : exit\n"+"---------------------------------\n ";
+    }
 
-        // save material
+    // save material
     public static void saveGame(Game game, int playerBel){ 
         try{
             if(playerBel == 1){
@@ -112,35 +121,42 @@ public class Testgame {
             System.out.println("Save error!!! Can't save game data.");
         }
     }
+    
+    public static void printGameMenu() {
+        System.out.println("\n###############################");
+        System.out.println("| Welcome to GoBoom Card Game |");
+        System.out.println("###############################");
+
+    }
 
     public static Game loadGame(int playerBel) { 
         try {
             FileInputStream init = new FileInputStream("player1.sav");
-            ObjectInputStream in = new ObjectInputStream(init);
-            Game game = (Game) in.readObject();
-            if(playerBel == 1){
-                FileInputStream fins = new FileInputStream("player1.sav");
-                ObjectInputStream ois = new ObjectInputStream(fins);
-                game = (Game) ois.readObject();
-                ois.close();
-            }else if(playerBel == 2){
-                FileInputStream fins = new FileInputStream("player2.sav");
-                ObjectInputStream ois = new ObjectInputStream(fins);
-                game = (Game) ois.readObject();
-                ois.close();
-            }else if(playerBel == 3){
-                FileInputStream fins = new FileInputStream("player3.sav");
-                ObjectInputStream ois = new ObjectInputStream(fins);
-                game = (Game) ois.readObject();
-                ois.close();
-            }else if(playerBel == 4){
-                FileInputStream fins = new FileInputStream("player4.sav");
-                ObjectInputStream ois = new ObjectInputStream(fins);
-                game = (Game) ois.readObject();
-                ois.close();
+            try (ObjectInputStream in = new ObjectInputStream(init)) {
+                Game game = (Game) in.readObject();
+                if(playerBel == 1){
+                    FileInputStream fins = new FileInputStream("player1.sav");
+                    ObjectInputStream ois = new ObjectInputStream(fins);
+                    game = (Game) ois.readObject();
+                    ois.close();
+                }else if(playerBel == 2){
+                    FileInputStream fins = new FileInputStream("player2.sav");
+                    ObjectInputStream ois = new ObjectInputStream(fins);
+                    game = (Game) ois.readObject();
+                    ois.close();
+                }else if(playerBel == 3){
+                    FileInputStream fins = new FileInputStream("player3.sav");
+                    ObjectInputStream ois = new ObjectInputStream(fins);
+                    game = (Game) ois.readObject();
+                    ois.close();
+                }else if(playerBel == 4){
+                    FileInputStream fins = new FileInputStream("player4.sav");
+                    ObjectInputStream ois = new ObjectInputStream(fins);
+                    game = (Game) ois.readObject();
+                    ois.close();
+                }
+                return game;
             }
-            System.out.println("Game loaded successfully.");
-            return game;
         } catch (Exception ex) {
             System.out.println("Load error!!! can't load data.");
             return null;
@@ -236,58 +252,37 @@ public class Testgame {
             try{
                 // System.out.println("jadi ke x jadi");
                 FileInputStream init = new FileInputStream("player1.sav");
-                ObjectInputStream in = new ObjectInputStream(init);
-                Game gameDup1 = (Game) in.readObject();
-                for(Card cardDup:gameDup1.getDupCenter()){
-                    String copySuit = cardDup.getSuit();
-                    String copyRank = cardDup.getRank();
-                    Card copyCardCenter = new Card(copySuit,copyRank);
-                    savedCenter.add(copyCardCenter);
+                try (ObjectInputStream in = new ObjectInputStream(init)) {
+                    Game gameDup1 = (Game) in.readObject();
+                    for(Card cardDup:gameDup1.getDupCenter()){
+                        String copySuit = cardDup.getSuit();
+                        String copyRank = cardDup.getRank();
+                        Card copyCardCenter = new Card(copySuit,copyRank);
+                        savedCenter.add(copyCardCenter);
+                    }
+                    for(Card cardDup:gameDup1.getDupdeck()){
+                        String copySuit = cardDup.getSuit();
+                        String copyRank = cardDup.getRank();
+                        Card copyCardCenter = new Card(copySuit,copyRank);
+                        savedDeck.add(copyCardCenter);
+                    }
+                    savedTurns = gameDup1.getDupTurns();
+                    savedTurnsNum = gameDup1.getDupTurnsNum();
+                    savedTricksNum = gameDup1.getDupTrickNum();
+                    savedPlayerTurns = gameDup1.getPlayerTurns();
                 }
-                for(Card cardDup:gameDup1.getDupdeck()){
-                    String copySuit = cardDup.getSuit();
-                    String copyRank = cardDup.getRank();
-                    Card copyCardCenter = new Card(copySuit,copyRank);
-                    savedDeck.add(copyCardCenter);
-                }
-                savedTurns = gameDup1.getDupTurns();
-                savedTurnsNum = gameDup1.getDupTurnsNum();
-                savedTricksNum = gameDup1.getDupTrickNum();
-                savedPlayerTurns = gameDup1.getPlayerTurns();
             }catch(Exception ex){
                 System.out.println("File cannot be retrieved");
             }
             
         }
 
+        printGameMenu();
         // set the player who starts the game
         Game.deterFirstTurns(game.getCenter().get(0).rank, Game.turns, Game.playerTurns);
 
-        boolean trick1bool = true;
         // start gameplay - for round 1 - player place cards
         while (true) {
-            // test condition for high score
-            // player1.getPlayCards().clear();
-
-            // player2.getPlayCards().remove(0);
-            // player2.getPlayCards().remove(1);
-            // player2.getPlayCards().remove(2);
-            // player2.getPlayCards().remove(3);
-
-            // player3.getPlayCards().remove(0);
-            // player3.getPlayCards().remove(1);
-            // player3.getPlayCards().remove(2);
-            // player3.getPlayCards().remove(3);
-
-            // player4.getPlayCards().remove(0);
-            // player4.getPlayCards().remove(1);
-            // player4.getPlayCards().remove(2);
-            // player4.getPlayCards().remove(3);
-            // System.out.print(eachRound(Game.tricksNum, player1, player2, player3,
-            // player4, game.getCenter(), game.getDeck(), Game.playerTurns));
-            // System.out.println("Game turns: " + Game.turns);
-            // System.out.println("Game turnsNum: " + Game.turnsNum);
-            // find winner
 
             String leadCardSuit = Game.center.get(0).suit;
             Card leadCard = Game.center.get(0);
@@ -303,37 +298,14 @@ public class Testgame {
             else if (Game.turns == 4)
                 arrCards = player4.getPlayCards();
 
-            // condition if the deck exhausted, skip turn
-            // System.out.println("Player turn: " + Game.turns);
-            // System.out.println("Player Hand: " + arrCards);
-            // if (Game.deck.isEmpty()) {
-            // System.out.println("Say hello");
-
-            // Iterator<Card> iterator = arrCards.iterator();
-
-            // while (iterator.hasNext()) {
-            // Card card = iterator.next();
-            // if (card.suit.equals(leadCard.getSuit()) ||
-            // card.rank.equals(leadCard.getRank())) {
-            // System.out.println("Card: " + card);
-            // iterator.remove();
-            // }
-            // }
-            // } else {
-            // System.out.println("The game deck is not empty.");
-            // }
-            // skip player turn if there is no card to play
-
-            System.out.println(p1);
-            System.out.println(player1.getPlayCards());
-            System.out.println(p2);
-            System.out.println(player2.getPlayCards());
-            System.out.println(p3);
-            System.out.println(player3.getPlayCards());
-            System.out.println(p4);
-            System.out.println(player4.getPlayCards());
-
-
+            // System.out.println(p1);
+            // System.out.println(player1.getPlayCards());
+            // System.out.println(p2);
+            // System.out.println(player2.getPlayCards());
+            // System.out.println(p3);
+            // System.out.println(player3.getPlayCards());
+            // Syste.out.println(p4);
+            // System.out.println(player4.getPlayCards());
 
             if (Game.deck.size() == 0) {
                 boolean canPlayCard = false;
@@ -344,17 +316,17 @@ public class Testgame {
                     }
                 }
                 if (!canPlayCard) {
-                    Game.turns++;
+                    //System.out.println("Turns : " +Game.turns);
+                    System.out.println("\nPlayer " + (Game.turns) + " has no cards matching the lead card. Skipping turn.\n");
+                    Game.turns += 1;
                     Game.deterPlayerTurn();
                     Game.turnsNum++;
-                    System.out.print(eachRound(Game.tricksNum, player1, player2, player3, player4, game.getCenter(),
-                            game.getDeck(), Game.playerTurns));
-                    System.out.println(
-                            "\nPlayer " + (Game.turns - 1) + " has no cards matching the lead card. Skipping turn.\n");
-                    continue;
+                    canPlayCard = true;
                 }
                 // String geString = input.next();
             }
+
+
             System.out.print(eachRound(Game.tricksNum, player1, player2, player3, player4, game.getCenter(),
                     game.getDeck(), Game.playerTurns));
             if (player1.getPlayCards().size() == 0 || player2.getPlayCards().size() == 0
@@ -465,6 +437,8 @@ public class Testgame {
                         Card copyCardDeck = new Card(copysuit,copyRank);
                         Game.deck.add(copyCardDeck);
                     }
+                    System.out.println("Load is successful!!");
+
                 }
             } else if (userInput.length() == 2
                     && (userInput.substring(0, 1).equals(Game.center.get(0).suit)
@@ -480,7 +454,7 @@ public class Testgame {
                         foundInd = 1;
                         if (Game.turnsNum == 4) {
                             ArrayList<Integer> values = new ArrayList<>();
-                            if (trick1bool) {
+                            if (trick1bool) { // trick 1
                                 for (int k = 1; k <= 4; k++) {
                                     if (leadCardSuit.equals(Game.center.get(k).suit)) { // compare suit
                                         int value = Game.compareCard(Game.center.get(k)); // compare rank
@@ -495,55 +469,55 @@ public class Testgame {
                                 System.out.println(highestValueIndex);
                                 winnerCard = Game.center.get(highestValueIndex+1);
                                 trick1bool = false;
-                            } else if (trick1bool == false) {
-                                for (int k = 1; k < Game.center.size(); k++) {
+                            } else if (!trick1bool) { // trick 2 and above
+                                for (int k = 0; k < Game.center.size(); k++) {
                                     if ((Game.center.get(0).suit).equals(Game.center.get(k).suit)) { // compare suit
-                                        if (leadCardSuit.equals(Game.center.get(k).suit)) { // compare suit
-                                            int value = Game.compareCard(Game.center.get(k)); // compare rank
-                                            values.add(value); // Add the value to the ArrayList
-                                        }
-                                        System.out.println(values);
+                                        int value = Game.compareCard(Game.center.get(k)); // compare rank
+                                        values.add(value); // Add the value to the ArrayList
+                                    } else {
+                                        values.add(0); // Add the value to the ArrayList
                                     }
+                                    System.out.println(values);
                                 }
                                 int highestValueIndex = values.indexOf(Collections.max(values));
                                 System.out.println(highestValueIndex);
                                 winnerCard = Game.center.get(highestValueIndex);
                             }
 
-                            System.out.println(p1);
-                            System.out.println(player1.getPlayCards());
-                            System.out.println(p2);
-                            System.out.println(player2.getPlayCards());
-                            System.out.println(p3);
-                            System.out.println(player3.getPlayCards());
-                            System.out.println(p4);
-                            System.out.println(player4.getPlayCards());
+                            // System.out.println(p1);
+                            // System.out.println(player1.getPlayCards());
+                            // System.out.println(p2);
+                            // System.out.println(player2.getPlayCards());
+                            // System.out.println(p3);
+                            // System.out.println(player3.getPlayCards());
+                            // System.out.println(p4);
+                            // System.out.println(player4.getPlayCards());
 
                             // print winner for the trick
                             if (p1.contains(winnerCard)) {
                                 //System.out.println("player1 menang");
-                                System.out.println("\n\n*** Player1 wins Trick #1 ***");
+                                System.out.println("\n\n*** Player1 wins Trick #"+ Game.tricksNum + " ***");
                                 System.out.println("Card winner: " + winnerCard);
                                 Game.turns = 1;
                                 Game.deterPlayerTurn();
                                 arrCards = player1.getPlayCards();
                             } else if (p2.contains(winnerCard)) {
                                 //System.out.println("player2 menang");
-                                System.out.println("\n\n*** Player2 wins Trick #1 ***");
+                                System.out.println("\n\n*** Player2 wins Trick #"+ Game.tricksNum + " ***");
                                 System.out.println("Card winner: " + winnerCard);
                                 Game.turns = 2;
                                 Game.deterPlayerTurn();
                                 arrCards = player2.getPlayCards();
                             } else if (p3.contains(winnerCard)) {                                
                                //System.out.println("player3 menang");
-                                System.out.println("\n\n*** Player3 wins Trick #1 ***");
+                                System.out.println("\n\n*** Player3 wins Trick #"+ Game.tricksNum + " ***");
                                 System.out.println("Card winner: " + winnerCard);
                                 Game.turns = 3;
                                 Game.deterPlayerTurn();
                                 arrCards = player3.getPlayCards();
                             } else if (p4.contains(winnerCard)) {
                                 //System.out.println("player4 menang");
-                                System.out.println("\n\n*** Player4 wins Trick #1 ***");
+                                System.out.println("\n\n*** Player4 wins Trick #"+ Game.tricksNum + " ***");
                                 System.out.println("Card winner: " + winnerCard);
                                 Game.turns = 0;
                                 Game.deterPlayerTurn();
@@ -583,7 +557,6 @@ public class Testgame {
                                             break;
                                         }
                                     }
-
                                     if (continueLoop) {
                                         System.out.println("You don't have that specific card!");
                                     }
@@ -609,9 +582,9 @@ public class Testgame {
                 if (foundInd == 0) {
                     System.out.println("You have no specific cards.");
                 }
-            }
-            
+            }  
         }
+
         input.close();
         System.out.println("Bye!! ");
     }
